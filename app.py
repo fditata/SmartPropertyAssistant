@@ -1,65 +1,35 @@
-import streamlit as st
+import os
+from dotenv import load_dotenv
+import openai
 
-# Simula la generación de una lista de equipamiento basada en los inputs del usuario
-def generar_lista_equipamiento(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta):
-    # Base de equipamiento esencial para todas las propiedades
-    equipamiento_base = [
-        'Wi-Fi', 'TV', 'Calefacción', 'Aire acondicionado', 'Detector de humo', 'Extintor de incendios',
-        'Juego de sábanas', 'Almohadas', 'Toallones', 'Jabón', 'Shampoo', 'Utensilios de cocina básicos',
-        'Platos y cubiertos', 'Cafetera', 'Tostadora'
-    ]
+# Carga las variables de entorno desde .env
+load_dotenv()
+# Configura tu clave de API de OpenAI (asegúrate de mantenerla segura y no exponerla públicamente)
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+def obtener_recomendaciones(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta):
+    # Construye el prompt para la API de OpenAI
+    prompt = f"Generar una lista de recomendaciones de equipamiento para un {tipo_propiedad} con {cant_habitaciones} habitaciones, {cant_banos} baños, {'con' if patio else 'sin'} patio, y {'con' if pileta else 'sin'} pileta, destinado a Airbnb."
     
-    # Agrega elementos específicos según el tipo de propiedad
-    if tipo_propiedad == 'Departamento':
-        equipamiento_base += ['Plancha', 'Secador de pelo']
-    elif tipo_propiedad == 'Casa':
-        equipamiento_base += ['Lavadora', 'Secadora']
-    
-    # Considera características específicas de la propiedad
-    if cant_banos > 1:
-        equipamiento_base += ['Juego adicional de toallones por baño']
-    
-    if patio:
-        equipamiento_base += ['Muebles de patio']
-    
-    if pileta:
-        equipamiento_base += ['Toallas para la pileta', 'Reposeras']
-    
-    return equipamiento_base
+    # Llama a la API de OpenAI y obtiene la respuesta
+    response = openai.Completion.create(
+      engine="text-davinci-003",  # Puedes elegir el modelo que mejor se adapte a tus necesidades
+      prompt=prompt,
+      max_tokens=150  # Ajusta según la longitud deseada de la respuesta
+    )
 
-# Título de la aplicación
-st.title('SmartProperty Assistant')
+    return response.choices[0].text.strip()
 
-# Descripción de la aplicación
-st.write("""
-Esta aplicación te ayuda a equipar tu departamento para Airbnb, asegurando que tengas todo lo necesario para una estancia confortable y satisfactoria para tus huéspedes.
-""")
+# Configuración de Streamlit
+st.title("SmartProperty Assistant")
 
-# Entradas del usuario
-st.header('Configura tu propiedad')
-tipo_propiedad = st.selectbox('Tipo de Propiedad', ['Departamento', 'Casa', 'Estudio'])
-cant_habitaciones = st.number_input('Cantidad de Habitaciones', min_value=1, max_value=10, step=1)
-cant_banos = st.number_input('Cantidad de Baños', min_value=1, max_value=5, step=1)
-patio = st.checkbox('¿Tiene Patio?')
-pileta = st.checkbox('¿Tiene Pileta?')
+# Recolección de inputs del usuario
+tipo_propiedad = st.selectbox("Tipo de Propiedad", ["Departamento", "Casa", "Estudio"])
+cant_habitaciones = st.number_input("Cantidad de Habitaciones", min_value=1, step=1)
+cant_banos = st.number_input("Cantidad de Baños", min_value=1, step=1)
+patio = st.checkbox("¿Tiene Patio?")
+pileta = st.checkbox("¿Tiene Pileta?")
 
-# Botón de acción y generación de lista de equipamiento
-if st.button('Generar Lista de Equipamiento'):
-    lista_equipamiento = generar_lista_equipamiento(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta)
-    st.success('Lista de equipamiento generada con éxito!')
-    st.write('Aquí tienes una lista personalizada de equipamiento para tu propiedad:')
-    for item in lista_equipamiento:
-        st.write(f"- {item}")
-
-# Sección "Cómo funciona"
-st.header('¿Cómo funciona SmartProperty Assistant?')
-st.write("""
-Basado en el tipo de propiedad, la cantidad de habitaciones, baños y características especiales como patio o pileta, SmartProperty Assistant genera una lista detallada de equipamiento esencial. Esta lista está diseñada para cubrir todas las necesidades básicas de tus huéspedes, mejorando su experiencia y tus calificaciones en Airbnb.
-""")
-
-# Notas adicionales
-st.sidebar.header('Notas Adicionales')
-st.sidebar.write("""
-- Considera las preferencias y necesidades de tus huéspedes al seleccionar los ítems de esta lista.
-- Revisa y actualiza regularmente el equipamiento de tu propiedad para mantener la satisfacción de los huéspedes.
-""")
+if st.button("Generar Recomendaciones de Equipamiento"):
+    recomendaciones = obtener_recomendaciones(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta)
+    st.write(recomendaciones)
