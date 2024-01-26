@@ -1,21 +1,29 @@
 import streamlit as st
 
 # Simula la generación de una lista de equipamiento basada en los inputs del usuario
-def generar_lista_equipamiento(tipo_hospedaje, cant_habitaciones):
-    # Base de equipamiento común para todos los tipos de hospedaje
-    equipamiento_base = ['Wi-Fi', 'Detector de humo', 'Botiquín de primeros auxilios', 'Extintor de incendios']
+def generar_lista_equipamiento(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta):
+    # Base de equipamiento esencial para todas las propiedades
+    equipamiento_base = [
+        'Wi-Fi', 'TV', 'Calefacción', 'Aire acondicionado', 'Detector de humo', 'Extintor de incendios',
+        'Juego de sábanas', 'Almohadas', 'Toallones', 'Jabón', 'Shampoo', 'Utensilios de cocina básicos',
+        'Platos y cubiertos', 'Cafetera', 'Tostadora'
+    ]
     
-    # Agrega equipamiento específico según el tipo de hospedaje
-    if tipo_hospedaje == 'Casa completa':
-        equipamiento_base += ['Cocina equipada', 'Lavadora', 'Patio o balcón']
-    elif tipo_hospedaje == 'Apartamento':
-        equipamiento_base += ['Cocina equipada', 'Lavavajillas']
-    elif tipo_hospedaje == 'Habitación privada':
-        equipamiento_base += ['Cerradura en la puerta de la habitación']
+    # Agrega elementos específicos según el tipo de propiedad
+    if tipo_propiedad == 'Departamento':
+        equipamiento_base += ['Plancha', 'Secador de pelo']
+    elif tipo_propiedad == 'Casa':
+        equipamiento_base += ['Lavadora', 'Secadora']
     
-    # Ajusta la lista basándose en la cantidad de habitaciones
-    if cant_habitaciones > 1:
-        equipamiento_base += ['Baño adicional', f'{cant_habitaciones} juegos de llaves']
+    # Considera características específicas de la propiedad
+    if cant_banos > 1:
+        equipamiento_base += ['Juego adicional de toallones por baño']
+    
+    if patio:
+        equipamiento_base += ['Muebles de patio']
+    
+    if pileta:
+        equipamiento_base += ['Toallas para la pileta', 'Reposeras']
     
     return equipamiento_base
 
@@ -24,17 +32,20 @@ st.title('SmartProperty Assistant')
 
 # Descripción de la aplicación
 st.write("""
-SmartProperty Assistant es una aplicación innovadora diseñada para optimizar la gestión de propiedades en plataformas de alquiler vacacional. Utilizando inteligencia artificial, facilita el equipamiento inicial y el mantenimiento continuo de las propiedades, mejorando la experiencia de los huéspedes y la rentabilidad de las mismas.
+Esta aplicación te ayuda a equipar tu departamento para Airbnb, asegurando que tengas todo lo necesario para una estancia confortable y satisfactoria para tus huéspedes.
 """)
 
 # Entradas del usuario
 st.header('Configura tu propiedad')
-tipo_hospedaje = st.selectbox('Tipo de Hospedaje', ['Casa completa', 'Apartamento', 'Habitación privada'])
+tipo_propiedad = st.selectbox('Tipo de Propiedad', ['Departamento', 'Casa', 'Estudio'])
 cant_habitaciones = st.number_input('Cantidad de Habitaciones', min_value=1, max_value=10, step=1)
+cant_banos = st.number_input('Cantidad de Baños', min_value=1, max_value=5, step=1)
+patio = st.checkbox('¿Tiene Patio?')
+pileta = st.checkbox('¿Tiene Pileta?')
 
 # Botón de acción y generación de lista de equipamiento
 if st.button('Generar Lista de Equipamiento'):
-    lista_equipamiento = generar_lista_equipamiento(tipo_hospedaje, cant_habitaciones)
+    lista_equipamiento = generar_lista_equipamiento(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta)
     st.success('Lista de equipamiento generada con éxito!')
     st.write('Aquí tienes una lista personalizada de equipamiento para tu propiedad:')
     for item in lista_equipamiento:
@@ -43,12 +54,12 @@ if st.button('Generar Lista de Equipamiento'):
 # Sección "Cómo funciona"
 st.header('¿Cómo funciona SmartProperty Assistant?')
 st.write("""
-SmartProperty Assistant utiliza algoritmos de inteligencia artificial para ofrecer recomendaciones personalizadas de equipamiento basadas en el tipo de hospedaje, la cantidad de habitaciones y otros factores. Estas recomendaciones están diseñadas para satisfacer las expectativas de los huéspedes y mejorar la rentabilidad de tu propiedad.
+Basado en el tipo de propiedad, la cantidad de habitaciones, baños y características especiales como patio o pileta, SmartProperty Assistant genera una lista detallada de equipamiento esencial. Esta lista está diseñada para cubrir todas las necesidades básicas de tus huéspedes, mejorando su experiencia y tus calificaciones en Airbnb.
 """)
 
 # Notas adicionales
 st.sidebar.header('Notas Adicionales')
 st.sidebar.write("""
-- Las recomendaciones se personalizan según las características de cada propiedad.
-- Regularmente actualizamos nuestra base de datos con las últimas tendencias del mercado y expectativas de los huéspedes.
+- Considera las preferencias y necesidades de tus huéspedes al seleccionar los ítems de esta lista.
+- Revisa y actualiza regularmente el equipamiento de tu propiedad para mantener la satisfacción de los huéspedes.
 """)
