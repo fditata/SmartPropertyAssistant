@@ -1,4 +1,13 @@
 import streamlit as st
+import random
+
+# Simula la generación de una lista de equipamiento
+def generar_lista_equipamiento():
+    # Lista de ejemplo de posibles equipamientos
+    equipamientos = ['TV Smart', 'Wi-Fi', 'Cafetera', 'Aire acondicionado', 'Calefacción', 'Juego de toallas', 'Ropa de cama', 'Secador de pelo', 'Cocina equipada', 'Detector de humo']
+    # Selecciona una cantidad aleatoria de equipamientos para simular la lista
+    lista_seleccionada = random.sample(equipamientos, k=random.randint(5, len(equipamientos)))
+    return lista_seleccionada
 
 # Título de la aplicación
 st.title('SmartProperty Assistant')
@@ -8,10 +17,13 @@ st.write("""
 SmartProperty Assistant es una aplicación innovadora diseñada para optimizar la gestión de propiedades en plataformas de alquiler vacacional como Airbnb. Utilizando tecnologías avanzadas de inteligencia artificial, esta aplicación asiste a los administradores de propiedades en el equipamiento inicial y el mantenimiento continuo, asegurando una experiencia de alta calidad para los huéspedes y maximizando la rentabilidad de las propiedades.
 """)
 
-# Botón de acción
+# Botón de acción y generación de lista de equipamiento
 if st.button('Generar Lista de Equipamiento'):
-    # Aquí iría la lógica para generar la lista de equipamiento
+    lista_equipamiento = generar_lista_equipamiento()
     st.success('Lista de equipamiento generada con éxito!')
+    st.write('Aquí tienes una lista personalizada de equipamiento para tu propiedad:')
+    for item in lista_equipamiento:
+        st.write(f"- {item}")
 
 # Sección "Cómo funciona"
 st.header('¿Cómo funciona SmartProperty Assistant?')
