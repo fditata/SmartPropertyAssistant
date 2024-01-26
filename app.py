@@ -1,7 +1,10 @@
 import os
 import openai
 import streamlit as st
+from dotenv import load_dotenv
 
+# Carga las variables de entorno desde .env
+load_dotenv()
 
 # Configura tu clave de API de OpenAI usando una variable de entorno
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -10,16 +13,15 @@ def obtener_recomendaciones(tipo_propiedad, cant_habitaciones, cant_banos, patio
     # Construye el prompt para la API de OpenAI
     prompt = f"Generar una lista de recomendaciones de equipamiento para un {tipo_propiedad} con {cant_habitaciones} habitaciones, {cant_banos} baños, {'con' if patio else 'sin'} patio, y {'con' if pileta else 'sin'} pileta, destinado a Airbnb."
 
-    # Llama a la API de OpenAI y obtiene la respuesta
-    response = openai.Completion.create(
-        engine="text-davinci-003",  # O el modelo más adecuado para tus necesidades
-        prompt=prompt,
-        max_tokens=150,
-        temperature=0.7
+    # Llama a la API de OpenAI y obtiene la respuesta usando el endpoint de chat
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-1106",  # Usando el modelo de chat
+        messages=[{"role": "system", "content": "You are a helpful assistant."},
+                  {"role": "user", "content": prompt}]
     )
 
     # Asegúrate de acceder correctamente al texto de la respuesta
-    return response['choices'][0]['text'].strip()
+    return response['choices'][0]['message']['content']
 
 # Configuración de Streamlit
 st.title("SmartProperty Assistant")
