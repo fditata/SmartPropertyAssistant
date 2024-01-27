@@ -7,7 +7,7 @@ import streamlit as st
 # load_dotenv()
 
 # Configura tu clave de API de OpenAI usando una variable de entorno
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = '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'
 
 
 
