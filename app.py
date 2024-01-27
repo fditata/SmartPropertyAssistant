@@ -1,11 +1,6 @@
 import os
 import streamlit as st
-# import dotenv
 from openai import OpenAI
-
-# dotenv.load_dotenv()
-
-# os.environ.get
 
 OpenAIKey = os.environ.get("OPENAI_API_KEY")
 
@@ -13,7 +8,7 @@ client = OpenAI(api_key=OpenAIKey)
 
 
 def obtener_recomendaciones(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta):
-    # Construye el prompt para la API de OpenAI
+    # Prompt para la API de OpenAI
     prompt = f"Generar una lista de recomendaciones de equipamiento para un {tipo_propiedad} con {cant_habitaciones} habitaciones, {cant_banos} baños, {'con' if patio else 'sin'} patio, y {'con' if pileta else 'sin'} pileta, destinado a Airbnb."
 
     chat_completion = client.chat.completions.create(
@@ -26,7 +21,7 @@ def obtener_recomendaciones(tipo_propiedad, cant_habitaciones, cant_banos, patio
         model="gpt-3.5-turbo",
     )
 
-    # Accede al contenido del mensaje usando la notación de puntos
+    # Accedo al contenido
     response_message = chat_completion.choices[0].message.content
 
     return response_message
