@@ -26,7 +26,17 @@ def obtener_recomendaciones(tipo_propiedad, cant_habitaciones, cant_banos, patio
 # Configuración de Streamlit
 st.title("SmartProperty Assistant")
 
+# Sección "Cómo funciona"
+st.header("Cómo funciona")
+st.write("""
+- **Características clave**: `SmartProperty Assistant` utiliza la inteligencia artificial avanzada de OpenAI para generar recomendaciones personalizadas de equipamiento para propiedades destinadas a alquileres vacacionales como Airbnb. Analiza las características específicas de cada propiedad para ofrecer una lista detallada de elementos necesarios.
+- **Cómo realizar solicitudes**: Simplemente selecciona las características de tu propiedad en el formulario de la aplicación, como el tipo de propiedad, la cantidad de habitaciones y baños, y si cuenta con patio o pileta.
+- **Qué esperar como resultado**: Después de enviar tus preferencias haciendo clic en "Generar Recomendaciones de Equipamiento", recibirás una lista personalizada de recomendaciones para equipar tu propiedad, mejorando así la experiencia de los huéspedes y potencialmente aumentando la rentabilidad de tus alquileres.
+- **Información adicional**: La precisión de las recomendaciones puede variar según la complejidad de la solicitud y las tendencias actuales del mercado. Se recomienda utilizar estas recomendaciones como una guía inicial y ajustar según sea necesario.
+""")
+
 # Recolección de inputs del usuario
+st.subheader("Configura tu propiedad")
 tipo_propiedad = st.selectbox("Tipo de Propiedad", ["Departamento", "Casa", "Estudio"])
 cant_habitaciones = st.number_input("Cantidad de Habitaciones", min_value=1, step=1)
 cant_banos = st.number_input("Cantidad de Baños", min_value=1, step=1)
