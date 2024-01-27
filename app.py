@@ -1,13 +1,15 @@
 import os
 import openai
 import streamlit as st
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 # Carga las variables de entorno desde .env
-load_dotenv()
+# load_dotenv()
 
 # Configura tu clave de API de OpenAI usando una variable de entorno
 openai.api_key = os.getenv('OPENAI_API_KEY')
+
+
 
 def obtener_recomendaciones(tipo_propiedad, cant_habitaciones, cant_banos, patio, pileta):
     # Construye el prompt para la API de OpenAI
